@@ -1,0 +1,48 @@
+# WireGuardデモ用: Client / Server の2コンテナ
+# 外側ネットワーク 10.20.0.0/24 の上に、VPN内 10.10.0.0/24 を作る
+#
+# 事前に ./setup-keys.sh を1回実行して鍵と wg0.conf を生成すること。
+services:
+  wg-server:
+    image: ubuntu:24.04
+    container_name: wg-server
+    cap_add:
+      - NET_ADMIN
+    networks:
+      outside:
+        ipv4_address: 10.20.0.20
+    volumes:
+      - ./server:/etc/wireguard
+      - ./internal:/var/www/internal:ro
+    command: >
+      bash -c "apt-get update -qq &&
+      apt-get install -y -qq wireguard-tools iproute2 iputils-ping tcpdump python3 >/dev/null &&
+      sed -i 's/\r$$//' /etc/wireguard/wg0.conf &&
+      wg-quick up wg0 &&
+      cd /var/www/internal &&
+      python3 -m http.server 8000 --bind 10.10.0.1"
+
+  wg-client:
+    image: ubuntu:24.04
+    container_name: wg-client
+    cap_add:
+      - NET_ADMIN
+    networks:
+      outside:
+        ipv4_address: 10.20.0.10
+    volumes:
+      - ./client:/etc/wireguard
+    # クライアント側はVPNを上げずに待機（受講者が手でup/downする）
+    command: >
+      bash -c "apt-get update -qq &&
+      apt-get install -y -qq wireguard-tools iproute2 iputils-ping tcpdump curl >/dev/null &&
+      sed -i 's/\r$$//' /etc/wireguard/wg0.conf &&
+      echo 'wg-client ready. docker exec でVPNを操作してください' &&
+      sleep infinity"
+
+networks:
+  outside:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.20.0.0/24
