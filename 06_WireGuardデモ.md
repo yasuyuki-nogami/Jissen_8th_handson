@@ -66,7 +66,8 @@ docker exec wg-client ping -c 3 -W 2 10.10.0.1
 
 - `ip -br addr` に **wg0 は存在しない**（lo と eth0 のみ）
 - `ip route` に 10.10.0.0/24 の経路は**ない**
-- ping は `Network is unreachable` 等で**失敗する**
+- ping は**失敗する**（`100% packet loss` と表示され、応答が1つも返らない）
+  （コンテナには既定の経路 `default via 10.20.0.1` があるので、ping は外側へ出ていくが、10.10.0.1 はどこにもいないので返事が来ない）
 
 ここが起点。「仮想NICも経路も、相手への道もない」状態。
 
@@ -76,9 +77,14 @@ docker exec wg-client ping -c 3 -W 2 10.10.0.1
 docker exec wg-client wg-quick up wg0
 ```
 
-✅ 確認: `ip link add wg0 type wireguard` →
-`ip -4 address add 10.10.0.2/24 dev wg0` →
-`ip -4 route add 10.10.0.0/24 dev wg0` 相当のログが流れる。
+✅ 確認: 次のようなログが流れる。
+```
+[#] ip link add wg0 type wireguard
+[#] wg setconf wg0 /dev/fd/63
+[#] ip -4 address add 10.10.0.2/24 dev wg0
+[#] ip link set mtu 1420 up dev wg0
+```
+（10.10.0.0/24 の経路は、`10.10.0.2/24` というアドレスを付けた時点で自動で追加される。そのため route add の行は出ない）
 
 もう一度同じ3コマンドで観察:
 
@@ -91,7 +97,7 @@ docker exec wg-client ping -c 3 10.10.0.1
 ✅ 確認:
 
 - `wg0` が現れ、`10.10.0.2/24` が付いている
-- `ip route` に `10.10.0.0/24 dev wg0` が**追加されている**
+- `ip route` に `10.10.0.0/24 dev wg0 proto kernel scope link src 10.10.0.2` が**追加されている**
 - ping 10.10.0.1 が**通る**
 
 ```bash
@@ -109,7 +115,8 @@ pingやcurlは**VPN内IP宛**に打つ。
 【ターミナル1】サーバー側の外側NICを観察:
 
 ```bash
-docker exec wg-server tcpdump -i eth0 -nn 'udp port 51820'
+# -it を付けると、Ctrl+C で tcpdump を止められる
+docker exec -it wg-server tcpdump -i eth0 -nn 'udp port 51820'
 ```
 
 【ターミナル2】並行して通信を発生させる:

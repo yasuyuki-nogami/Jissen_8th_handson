@@ -44,7 +44,8 @@ mkdir -p ~/security-lab/wg-keys
 cd ~/security-lab/wg-keys
 
 # 秘密鍵を作り、そこから公開鍵を導出する
-wg genkey | tee privatekey | wg pubkey > publickey
+# umask 077 で、秘密鍵ファイルを自分だけが読める権限で作る
+(umask 077; wg genkey | tee privatekey | wg pubkey > publickey)
 
 cat publickey
 ```

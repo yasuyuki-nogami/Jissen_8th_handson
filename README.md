@@ -14,6 +14,8 @@
 ├── 04_SSHトンネル応用.md
 ├── 05_VPNの考え方.md
 ├── 06_WireGuardデモ.md
+├── setup_wsl.sh            … 準備スクリプト（WSL の Ubuntu 用）
+├── setup_pi.sh             … 準備スクリプト（Raspberry Pi OS 用）
 └── files/
     └── wireguard/
         ├── docker-compose.yml  … WireGuardデモ用の2コンテナ
@@ -22,6 +24,20 @@
         ├── client/             … クライアント側 wg0.conf（同上）
         └── internal/index.html … VPN内側のWebコンテンツ
 ```
+
+## 準備（setup スクリプト）
+
+第7回の setup とハンズオンが済んだ環境で、WSL または Raspberry Pi のターミナルから次を実行します。
+
+```bash
+cd ~ && git clone https://github.com/<アカウント>/<リポジトリ名>.git
+cd <リポジトリ名>
+bash setup_wsl.sh    # Raspberry Pi なら bash setup_pi.sh
+```
+
+setup は、tcpdump・wireguard-tools などのインストール、`files/` の `~/security-lab/files` へのコピー（CRLF の除去も含む）、
+第7回の環境（`ssh localhost` の鍵認証、`https://localhost/`）が残っているかの確認を行います。
+`[注意]` が出たら、その指示に従ってください。
 
 ## 前提環境
 
@@ -64,8 +80,7 @@ HTMLが返れば（証明書エラーが出なければ）OK。
 - 複数ターミナルを使う手順が多くあります。
   各コマンドの前の「ターミナル1/2/3」の表記に従ってください。
 - 作業ディレクトリは `~/security-lab/` 配下を使います。
-- 6時間目は `files/wireguard/` を使用します。
-  事前にVMへこのディレクトリ一式をコピーしておいてください。
+- 6時間目は `~/security-lab/files/wireguard/` を使用します（setup がコピーします）。
 
 ## 注意（改行コード）
 
