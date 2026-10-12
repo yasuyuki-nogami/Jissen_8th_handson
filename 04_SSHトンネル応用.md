@@ -27,20 +27,20 @@ python3 -m http.server 8000 --bind 127.0.0.1
 
 ## Step 2. 外側からは直接届かないことを確認
 
-まずVMのIPアドレス（外側NIC）を調べる:
+まず自分のマシンのIPアドレス（外側NIC）を調べる:
 
 ```bash
 ip -br addr
 ```
 
-【別ターミナル】外側の立場で、VMのIPアドレス宛に直接叩く:
+【別ターミナル】外側の立場で、自分のマシンのIPアドレス宛に直接叩く:
 
 ```bash
-# <VMのIPアドレス> は上で調べたIPに読み替え
-curl --max-time 3 http://<VMのIPアドレス>:8000/
+# <自分のIPアドレス> は上で調べたIPに読み替え
+curl --max-time 3 http://<自分のIPアドレス>:8000/
 ```
 
-✅ 確認: `curl: (7) Failed to connect to <VMのIPアドレス> port 8000 ...`
+✅ 確認: `curl: (7) Failed to connect to <自分のIPアドレス> port 8000 ...`
 
 - `--bind 127.0.0.1` のため、ループバック以外の
   インターフェース宛の接続は**受け付けない**

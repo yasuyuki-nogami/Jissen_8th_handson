@@ -25,7 +25,7 @@ ssh -N -L ローカルポート:接続先ホスト:接続先ポート user@ssh-s
 
 ## Step 1. 【ターミナルS】SSHサーバー側に「外に出ていないWeb」を立てる
 
-演習ではSSHサーバーを自分のVM（localhost）で見立てます。
+演習ではSSHサーバーを自分のマシン（localhost）で見立てます。
 
 ```bash
 cd ~/security-lab/web

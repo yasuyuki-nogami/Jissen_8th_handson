@@ -13,10 +13,10 @@
 VPN内ネットワーク 10.10.0.0/24（WireGuardが作る）
 ```
 
-鍵・設定は講師側（またはStep 1）で準備済み。
+鍵・設定は Step 1 の setup-keys.sh で作る。
 受講者は**設定を読み、up/downの前後を観察**します。
 
-**前提**: VMに wireguard-tools が入っていること
+**前提**: 手元のマシン（WSL / Raspberry Pi）に wireguard-tools が入っていること
 （カーネルモジュールはUbuntu 22.04+なら標準装備）。
 
 ---

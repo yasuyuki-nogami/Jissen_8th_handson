@@ -41,14 +41,14 @@ setup は、tcpdump・wireguard-tools などのインストール、`files/` の
 
 ## 前提環境
 
-- Ubuntu 22.04 / 24.04 の Linux VM（一般ユーザー + sudo可）
+- WSL（Ubuntu 22.04 / 24.04）または Raspberry Pi OS（一般ユーザー + sudo可）
 - インストール済みであること:
   - openssh-client / openssh-server（sshdが起動していること）
   - docker（`docker compose` が使えること）
   - curl / tcpdump
   - wireguard-tools（5時間目で使用。`sudo apt install -y wireguard-tools`）
 - ホストPC（Windows）に Wireshark（1時間目のGUI確認用。任意）
-- **VM側で80/443/8000/8080番ポートが空いていること**
+- **手元のマシンで80/443/8000/8080番ポートが空いていること**
 
 ## 【重要】第7回の演習環境が残っていること
 
@@ -84,7 +84,7 @@ HTMLが返れば（証明書エラーが出なければ）OK。
 
 ## 注意（改行コード）
 
-WindowsからVMへコピーした場合はCRLF除去を実施:
+Windowsからファイルをコピーした場合はCRLF除去を実施:
 
 ```bash
 find ~/security-lab/files -type f \( -name '*.sh' -o -name '*.conf' -o -name '*.yml' \) \
@@ -93,6 +93,6 @@ find ~/security-lab/files -type f \( -name '*.sh' -o -name '*.conf' -o -name '*.
 
 ## 注意（tcpdumpの扱い）
 
-- tcpdumpで観測するのは**自分のVM内の通信だけ**です。
+- tcpdumpで観測するのは**自分のマシン内の通信だけ**です。
   他人の通信を無断で観測することは不正行為になり得ます。
 - 演習で見える token 等はすべてダミー値です。
