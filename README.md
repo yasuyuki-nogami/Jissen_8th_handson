@@ -30,8 +30,8 @@
 第7回の setup とハンズオンが済んだ環境で、WSL または Raspberry Pi のターミナルから次を実行します。
 
 ```bash
-cd ~ && git clone https://github.com/<アカウント>/<リポジトリ名>.git
-cd <リポジトリ名>
+cd ~ && git clone https://github.com/yasuyuki-nogami/Jissen_8th_handson.git
+cd Jissen_8th_handson
 bash setup_wsl.sh    # Raspberry Pi なら bash setup_pi.sh
 ```
 
